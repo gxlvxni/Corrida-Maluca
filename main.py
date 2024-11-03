@@ -10,6 +10,7 @@ pygame.display.set_caption("Corrida Maluca")
 branco = (255,255,255)
 preta = (0,0,0)
 fundo = pygame.image.load("assets/fundo.png")
+fundo_vitoria = pygame.image.load("assets/fundo_vitoria.png")
 carro1 = pygame.image.load("assets/carro1.png")
 carro2 = pygame.image.load("assets/carro2.png")
 carro3 = pygame.image.load("assets/carro3.png")
@@ -80,6 +81,21 @@ while True:
     elif posYCar3 == 500 and movXCar3 >= 900 and movXCar3 > movXCar1:
         tela.blit(textoAzul, (270,180))
         acabou = True
+         
+    if not acabou:
+        distancias = [movXCar1, movXCar2, movXCar3]
+        primeiro_colocado = max(distancias)
+        segundo_colocado = sorted(distancias)[-2]
+        distancia_para_segundo = primeiro_colocado - segundo_colocado
+
+        fonte = pygame.font.Font("freesansbold.ttf", 30)
+        texto = fonte.render(f"Vencendo: {distancias.index(primeiro_colocado) + 1} - Distância para 2º: {distancia_para_segundo}", True, branco)
+        tela.blit(texto, (20, 20))
+
+    else:
+        tela.fill( branco )
+        tela.blit(fundo_vitoria,(0,0))
+ 
     
     
     pygame.display.update()
