@@ -27,22 +27,24 @@ pygame.mixer.music.load("assets/trilha.mp3")
 pygame.mixer.music.play(-1)
 acabou = False
 somDaVitoria = False
-vencedor = None  
+vencedor = None
 
-
-def exibir_vencedor():
+def exibir_ranking(distancias):
     tela.fill(branco)
     tela.blit(fundo_vitoria, (0, 0))
-    fonte = pygame.font.Font("freesansbold.ttf", 60)
-    if vencedor == "Vermelho":
-        texto = fonte.render("Vermelho Ganhou!", True, branco)
-    elif vencedor == "Amarelo":
-        texto = fonte.render("Amarelo Ganhou!", True, branco)
-    elif vencedor == "Azul":
-        texto = fonte.render("Azul Ganhou!", True, branco)
-    tela.blit(texto, (270, 70))
+    fonte = pygame.font.Font("freesansbold.ttf", 20)
+    
+   
+    carros = [("Vermelho", distancias[0]), ("Amarelo", distancias[1]), ("Azul", distancias[2])]
+    carros.sort(key=lambda x: x[1], reverse=True)  
+
+  
+    for i, (cor, distancia) in enumerate(carros):
+        texto = fonte.render(f"{i+1}º - {cor} - {distancia} metros", True, branco)
+        tela.blit(texto, (370, 100 + i * 50))
+    
     pygame.display.update()
-    pygame.time.delay(3000)  
+    pygame.time.delay(5000)  
 
 while True:
     for evento in pygame.event.get():
@@ -98,10 +100,11 @@ while True:
 
         fonte = pygame.font.Font("freesansbold.ttf", 30)
         texto = fonte.render(f"Vencendo: {distancias.index(primeiro_colocado) + 1} - Distância para 2º: {distancia_para_segundo}  Distância para 3º: {distancia_para_terceiro}", True, branco)
-        tela.blit(texto, (20, 20))
+        tela.blit(texto, (120, 20))
     else:
-        exibir_vencedor()  
         
+        exibir_ranking([movXCar1, movXCar2, movXCar3])  
+
     pygame.display.update()
     clock.tick(60)
 
