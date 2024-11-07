@@ -1,14 +1,14 @@
 import pygame
 import random
+
 pygame.init()
-tamanho = (1000,592)
+tamanho = (1000, 592)
 clock = pygame.time.Clock()
-tela = pygame.display.set_mode( tamanho )
+tela = pygame.display.set_mode(tamanho)
 icone = pygame.image.load("assets/icone.ico")
 pygame.display.set_icon(icone)
 pygame.display.set_caption("Corrida Maluca")
-branco = (255,255,255)
-preta = (0,0,0)
+branco = (255, 255, 255)
 fundo = pygame.image.load("assets/fundo.png")
 fundo_vitoria = pygame.image.load("assets/fundo_vitoria.png")
 carro1 = pygame.image.load("assets/carro1.png")
@@ -24,82 +24,86 @@ posYCar3 = 210
 vitoria = pygame.mixer.Sound("assets/vitoria.mp3")
 vitoria.set_volume(0.5)
 pygame.mixer.music.load("assets/trilha.mp3")
-pygame.mixer.music.play(-1) #-1 looping, 1,2 3 vezes
+pygame.mixer.music.play(-1)
 acabou = False
 somDaVitoria = False
+vencedor = None  
+
+
+def exibir_vencedor():
+    tela.fill(branco)
+    tela.blit(fundo_vitoria, (0, 0))
+    fonte = pygame.font.Font("freesansbold.ttf", 60)
+    if vencedor == "Vermelho":
+        texto = fonte.render("Vermelho Ganhou!", True, branco)
+    elif vencedor == "Amarelo":
+        texto = fonte.render("Amarelo Ganhou!", True, branco)
+    elif vencedor == "Azul":
+        texto = fonte.render("Azul Ganhou!", True, branco)
+    tela.blit(texto, (270, 70))
+    pygame.display.update()
+    pygame.time.delay(3000)  
+
 while True:
-    for evento in pygame.event.get(): 
+    for evento in pygame.event.get():
         if evento.type == pygame.QUIT:
+            pygame.quit()
             quit()
-   
-    tela.fill( branco )
-    tela.blit(fundo, (0,0))
-    tela.blit(carro1, (movXCar1,posYCar1))
-    tela.blit(carro2, (movXCar2,posYCar2))
-    tela.blit(carro3, (movXCar3,posYCar3))
-    
-    if not acabou :
-        movXCar1 = movXCar1 + random.randint(0,10)
-        movXCar2 = movXCar2 + random.randint(0,10)
-        movXCar3 = movXCar3 + random.randint(0,10)
+
+    tela.fill(branco)
+    tela.blit(fundo, (0, 0))
+    tela.blit(carro1, (movXCar1, posYCar1))
+    tela.blit(carro2, (movXCar2, posYCar2))
+    tela.blit(carro3, (movXCar3, posYCar3))
+
+    if not acabou:
+        movXCar1 += random.randint(0, 10)
+        movXCar2 += random.randint(0, 10)
+        movXCar3 += random.randint(0, 10)
     else:
         pygame.mixer.music.stop()
-        if somDaVitoria == False:
+        if not somDaVitoria:
             pygame.mixer.Sound.play(vitoria)
             somDaVitoria = True
-        
-    
+
     if movXCar1 > 1000:
         movXCar1 = 0
         posYCar1 = 310
-        
+
     if movXCar2 > 1000:
         movXCar2 = 0
         posYCar2 = 410
-    
+
     if movXCar3 > 1000:
         movXCar3 = 0
         posYCar3 = 500
-    
-    fonte = pygame.font.Font("freesansbold.ttf",60)
-    textoVermelho = fonte.render("Vermelho Ganhou!", True, branco)
-    textoAmarelo = fonte.render("Amarelo Ganhou!", True, branco)
-    textoAzul = fonte.render("Azul Ganhou!", True, branco)
-    
-    if posYCar1 == 310 and movXCar1 >= 900 and movXCar1 > movXCar2:
-        tela.blit(textoVermelho, (270,70))
-        acabou = True
-        
-    elif posYCar2 == 410 and movXCar2 >= 900 and movXCar2 > movXCar1:
-        tela.blit(textoAmarelo, (270,180))
-        acabou = True
-    
-    elif posYCar3 == 500 and movXCar3 >= 900 and movXCar3 > movXCar2:
-        tela.blit(textoAzul, (270,180))
-        acabou = True
-    
-    elif posYCar3 == 500 and movXCar3 >= 900 and movXCar3 > movXCar1:
-        tela.blit(textoAzul, (270,180))
-        acabou = True
-         
+
     if not acabou:
+        if posYCar1 == 310 and movXCar1 >= 900 and movXCar1 > movXCar2 and movXCar1 > movXCar3:
+            vencedor = "Vermelho"
+            acabou = True
+        elif posYCar2 == 410 and movXCar2 >= 900 and movXCar2 > movXCar1 and movXCar2 > movXCar3:
+            vencedor = "Amarelo"
+            acabou = True
+        elif posYCar3 == 500 and movXCar3 >= 900 and movXCar3 > movXCar1 and movXCar3 > movXCar2:
+            vencedor = "Azul"
+            acabou = True
+
         distancias = [movXCar1, movXCar2, movXCar3]
         primeiro_colocado = max(distancias)
         segundo_colocado = sorted(distancias)[-2]
+        terceiro_colocado = sorted(distancias)[2]
         distancia_para_segundo = primeiro_colocado - segundo_colocado
+        distancia_para_terceiro = segundo_colocado - terceiro_colocado
 
         fonte = pygame.font.Font("freesansbold.ttf", 30)
-        texto = fonte.render(f"Vencendo: {distancias.index(primeiro_colocado) + 1} - Distância para 2º: {distancia_para_segundo}", True, branco)
+        texto = fonte.render(f"Vencendo: {distancias.index(primeiro_colocado) + 1} - Distância para 2º: {distancia_para_segundo}  Distância para 3º: {distancia_para_terceiro}", True, branco)
         tela.blit(texto, (20, 20))
-
     else:
-        tela.fill( branco )
-        tela.blit(fundo_vitoria,(0,0))
- 
-    
-    
+        exibir_vencedor()  
+        
     pygame.display.update()
     clock.tick(60)
+
 pygame.quit()
-    
 
