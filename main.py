@@ -95,9 +95,9 @@ while True:
     else:
         tela.fill( branco )
         tela.blit(fundo_vitoria,(0,0))
+        
  
-    
-    
+     
     pygame.display.update()
     clock.tick(60)
 pygame.quit()
