@@ -102,11 +102,9 @@ while True:
         texto = fonte.render(f"Vencendo: {distancias.index(primeiro_colocado) + 1} - Distância para 2º: {distancia_para_segundo}  Distância para 3º: {distancia_para_terceiro}", True, branco)
         tela.blit(texto, (120, 20))
     else:
-        tela.fill( branco )
-        tela.blit(fundo_vitoria,(0,0))
- 
-    
-    
+        
+        exibir_ranking([movXCar1, movXCar2, movXCar3])  
+
     pygame.display.update()
     clock.tick(60)
 
